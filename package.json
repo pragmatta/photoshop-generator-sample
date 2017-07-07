@@ -1,0 +1,27 @@
+{
+  "name": "photoshop-generator-sample",
+  "version": "3.8.0",
+  "description": "SamplePlugin",
+  "main": "generator_sample.js",
+  "generator-core-version": "~3",
+  "keywords": [
+    "photoshop",
+    "generator"
+  ],
+  "author": "Matias Kiviniemi",
+  "license": "BSD-2-Clause",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/RationalMatta/photoshop-generator-sample"
+  },
+  "bugs": {
+    "url" : "https://github.com/RationalMatta/photoshop-generator-sample/issues",
+    "email" : "github@rational.zone"
+  },
+  "dependencies": {
+    "photoshop-generator-core": ">=3.7.0"
+  },
+  "devDependencies": {
+  },
+  "readme" : "readme.md"
+}
