@@ -11,5 +11,6 @@ To deploy the sample plugin
 5) Open browser and visit
    - http://localhost:8083/ for server info
    - http://localhost:8083/documents for a list of open documents
+   - http://localhost:8083/layerdata/DOCUMENT_ID for document root metadata
    - http://localhost:8083/layerdata/DOCUMENT_ID/LAYER_ID for layer metadata
    - http://localhost:8083/layercontent/DOCUMENT_ID/LAYER_ID for layer content as a PNG
