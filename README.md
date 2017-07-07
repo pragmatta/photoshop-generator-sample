@@ -14,3 +14,4 @@ To deploy the sample plugin
    - http://localhost:8083/layerdata/DOCUMENT_ID for document root metadata
    - http://localhost:8083/layerdata/DOCUMENT_ID/LAYER_ID for layer metadata
    - http://localhost:8083/layercontent/DOCUMENT_ID/LAYER_ID for layer content as a PNG
+   
