@@ -1,9 +1,9 @@
 {
   "name": "photoshop-generator-sample",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Sample Photoshop plugin using photoshop-generator-core for enabling HTTP access",
   "main": "generator_sample.js",
-  "generator-core-version": "~3",
+  "generator-core-version": "~4",
   "keywords": [
     "photoshop",
     "generator"
@@ -19,7 +19,7 @@
     "email" : "github@rational.zone"
   },
   "dependencies": {
-    "photoshop-generator-core": ">=3.8.0"
+    "photoshop-generator-core": ">=4.0.0"
   },
   "devDependencies": {
   },
