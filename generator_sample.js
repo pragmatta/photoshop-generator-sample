@@ -124,10 +124,10 @@ var SamplePlugin = {
         response.write(data)
         response.end()
     },
-    handleRequestDefault: function (operation, params, request, response) {
+    handleRequestDefault: function (path, params, body, request, response) {
         return SamplePlugin._state
     },
-    handleRequestPoll: function (operation, params, request, response) {
+    handleRequestPoll: function (path, params, body, request, response) {
         // Generator.logDebug("handleRequestPoll", "timestamp_param="+params.timestamp+", timestamp_state="+SamplePlugin._state.timestamp)
         if (!params.timestamp || params.timestamp >= SamplePlugin._state.timestamp) {
             SamplePlugin._polls.push(response)
@@ -202,26 +202,26 @@ var SamplePlugin = {
                 }
             }, function () { SamplePlugin._handleRequestError(response, 500, 'Photoshop failed to open file') })
     },
-    handleRequestDocuments: function (operation, params, request, response) {
+    handleRequestDocuments: function (path, params, body, request, response) {
         // Generator.logDebug("handleRequestDocuments", "params="+Generator.jsonEncode(params, true))
-        // Generator.logDebug("handleRequestDocuments", "operation="+Generator.jsonEncode(operation, true))
-        if (operation.id) { // request has a document id
-            var doc = Generator.documentGetById(operation.id || "")
+        // Generator.logDebug("handleRequestDocuments", "path="+path)
+        if (path[1]) { // request has a document id
+            var doc = Generator.documentGetById(path[1] || "")
             if (!doc) {
-                SamplePlugin._handleRequestError(response, 403, 'Document not found: '+operation.id) // no such doc
+                SamplePlugin._handleRequestError(response, 403, 'Document not found: '+path[1]) // no such doc
             } else {
-                if (operation.method) { // there's a method to execute on the document
+                if (path[2]) { // there's a method to execute on the document
                     // Generator.logDebug("handleRequestDocuments", "request="+Generator.jsonEncode(request, true))
                     var result = false
-                    if (operation.method == "activate") { // make this the active doc
+                    if (path[2] == "activate") { // make this the active doc
                         result = SamplePlugin.documentSetActive(doc)
 
-                    } else if (operation.method == "close") { // close this document
+                    } else if (path[2] == "close") { // close this document
                         Generator.logDebug("onServerSetDocuments", "close doc_id="+doc._uid)
                         Generator.photoshopCloseDocument(doc._uid, false)
                         result = true
                     }
-                    return '{"id":"'+doc._uid+'","operation":"'+operation.method+'","result":'+result+'}'
+                    return '{"id":"'+doc._uid+'","operation":"'+path[2]+'","result":'+result+'}'
                 } else {
                     SamplePlugin._handleRequestFileStream(response, doc._path)
                 }
@@ -238,17 +238,17 @@ var SamplePlugin = {
             }
         }
     },  
-    handleRequestLayercontent: function (operation, params, request, response) {
+    handleRequestLayercontent: function (path, params, body, request, response) {
         // Generator.logDebug("handleRequestLayercontent", "params="+Generator.jsonEncode(params, true))
-        Generator.logDebug("handleRequestLayercontent", "operation="+Generator.jsonEncode(operation, true))
-        if (operation.id) { // request needs a document id and a layer id
-            var doc = Generator.documentGetById(operation.id)
+        // Generator.logDebug("handleRequestLayercontent", "path="+path)
+        if (path[1]) { // request needs a document id and a layer id
+            var doc = Generator.documentGetById(path[1])
             if (!doc) {
-                SamplePlugin._handleRequestError(response, 403, 'Document not found: '+operation.id) // no such doc
+                SamplePlugin._handleRequestError(response, 403, 'Document not found: '+path[1]) // no such doc
             } else {
-                var layer = Generator.layerGetById(doc.id, operation.method || "")
+                var layer = Generator.layerGetById(doc.id, path[2] || "")
                 if (!layer) {
-                    SamplePlugin._handleRequestError(response, 403, 'Layer not found: '+operation.method) // no such layer
+                    SamplePlugin._handleRequestError(response, 403, 'Layer not found: '+path[2]) // no such layer
                 } else {
                     SamplePlugin._handleRequestLayerStream(response, doc, layer)
                 }
@@ -277,20 +277,20 @@ var SamplePlugin = {
         }
         return layer_data
     },
-    handleRequestLayerdata: function (operation, params, request, response) {
+    handleRequestLayerdata: function (path, params, body, request, response) {
         // Generator.logDebug("handleRequestLayerdata", "params="+Generator.jsonEncode(params, true))
-        // Generator.logDebug("handleRequestLayerdata", "operation="+Generator.jsonEncode(operation, true))
-        if (operation.id) { // request needs a document id and a layer id
-            var doc = Generator.documentGetById(operation.id)
+        // Generator.logDebug("handleRequestLayerdata", "path="+path)
+        if (path[1]) { // request needs a document id and a layer id
+            var doc = Generator.documentGetById(path[1])
             if (!doc) {
-                SamplePlugin._handleRequestError(response, 403, 'Document not found: '+operation.id) // no such doc
+                SamplePlugin._handleRequestError(response, 403, 'Document not found: '+path[1]) // no such doc
             } else {
                 var layer = doc // if no layer, the doc is "the layer"
-                if (operation.method) {
-                    layer = Generator.layerGetById(doc.id, operation.method)
+                if (path[2]) {
+                    layer = Generator.layerGetById(doc.id, path[2])
                 }
                 if (!layer) {
-                    SamplePlugin._handleRequestError(response, 403, 'Layer not found: '+operation.method) // no such layer
+                    SamplePlugin._handleRequestError(response, 403, 'Layer not found: '+path[2]) // no such layer
                 } else {
                     return SamplePlugin._parseLayerdata(doc, layer)
                 }
